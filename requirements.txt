@@ -1,0 +1,6 @@
+pandas          
+streamlit         
+seaborn           
+matplotlib.pyplot
+Image
+BytesIO
