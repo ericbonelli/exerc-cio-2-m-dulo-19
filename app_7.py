@@ -73,7 +73,11 @@ def main():
     # Verifica se há conteúdo carregado na aplicação
     if (data_file_1 is not None):
         bank_raw = load_data(data_file_1)
-        bank = bank_raw.copy()
+
+        if 'filtered_data' not in st.session_state:
+            st.session_state['filtered_data'] = bank_raw.copy()
+
+        bank = st.session_state['filtered_data']
 
         st.write('## Antes dos filtros')
         st.write(bank_raw.head())
@@ -151,69 +155,71 @@ def main():
                         .pipe(multiselect_filter, 'month', month_selected)
                         .pipe(multiselect_filter, 'day_of_week', day_of_week_selected)
             )
+            st.session_state['filtered_data'] = bank
 
-            st.write('## Após os filtros')
-            st.write(bank.head())
+        # Dados filtrados
+        st.write('## Após os filtros')
+        st.write(bank.head())
 
-            df_xlsx = to_excel(bank)
-            st.download_button(label='📥 Download tabela filtrada em EXCEL',
-                                data=df_xlsx ,
-                                file_name= 'bank_filtered.xlsx')
-            st.markdown("---")
+        df_xlsx = to_excel(bank)
+        st.download_button(label='📥 Download tabela filtrada em EXCEL',
+                            data=df_xlsx ,
+                            file_name= 'bank_filtered.xlsx')
+        st.markdown("---")
 
-            # PLOTS    
-            fig, ax = plt.subplots(1, 2, figsize = (10,4))
+        # PLOTS    
+        fig, ax = plt.subplots(1, 2, figsize = (10,4))
 
-            # Proporção original
-            bank_raw_target_perc = bank_raw.y.value_counts(normalize = True).to_frame(name='percentage') * 100
-            bank_raw_target_perc.index.name = 'response'
-            bank_raw_target_perc = bank_raw_target_perc.reset_index()
+        # Proporção original
+        bank_raw_target_perc = bank_raw.y.value_counts(normalize = True).to_frame(name='percentage') * 100
+        bank_raw_target_perc.index.name = 'response'
+        bank_raw_target_perc = bank_raw_target_perc.reset_index()
 
-            # Proporção com filtros
-            bank_target_perc = bank.y.value_counts(normalize = True).to_frame(name='percentage') * 100
-            bank_target_perc.index.name = 'response'
-            bank_target_perc = bank_target_perc.reset_index()
+        # Proporção com filtros
+        bank_target_perc = bank.y.value_counts(normalize = True).to_frame(name='percentage') * 100
+        bank_target_perc.index.name = 'response'
+        bank_target_perc = bank_target_perc.reset_index()
 
-            # Botões de download dos dados dos gráficos
-            col1, col2 = st.columns(2)
+        # Botões de download dos dados dos gráficos
+        col1, col2 = st.columns(2)
 
-            df_xlsx = to_excel(bank_raw_target_perc)
-            col1.write('### Proporção original')
-            col1.write(bank_raw_target_perc)
-            col1.download_button(label='📥 Download',
-                                data=df_xlsx ,
-                                file_name= 'bank_raw_y.xlsx')
-            
-            df_xlsx = to_excel(bank_target_perc)
-            col2.write('### Proporção da tabela com filtros')
-            col2.write(bank_target_perc)
-            col2.download_button(label='📥 Download',
-                                data=df_xlsx ,
-                                file_name= 'bank_y.xlsx')
-            st.markdown("---")
+        df_xlsx = to_excel(bank_raw_target_perc)
+        col1.write('### Proporção original')
+        col1.write(bank_raw_target_perc)
+        col1.download_button(label='📥 Download',
+                            data=df_xlsx ,
+                            file_name= 'bank_raw_y.xlsx')
+        
+        df_xlsx = to_excel(bank_target_perc)
+        col2.write('### Proporção da tabela com filtros')
+        col2.write(bank_target_perc)
+        col2.download_button(label='📥 Download',
+                            data=df_xlsx ,
+                            file_name= 'bank_y.xlsx')
+        st.markdown("---")
 
-            st.write('## Proporção de aceite')
+        st.write('## Proporção de aceite')
 
-            if graph_type == 'Barras':
-                sns.barplot(x='response', y='percentage', data=bank_raw_target_perc, ax=ax[0])
-                ax[0].bar_label(ax[0].containers[0])
-                ax[0].set_title('Dados brutos', fontsize=12, fontweight="bold")
+        if graph_type == 'Barras':
+            sns.barplot(x='response', y='percentage', data=bank_raw_target_perc, ax=ax[0])
+            ax[0].bar_label(ax[0].containers[0])
+            ax[0].set_title('Dados brutos', fontsize=12, fontweight="bold")
 
-                sns.barplot(x='response', y='percentage', data=bank_target_perc, ax=ax[1])
-                ax[1].bar_label(ax[1].containers[0])
-                ax[1].set_title('Dados filtrados', fontsize=12, fontweight="bold")
+            sns.barplot(x='response', y='percentage', data=bank_target_perc, ax=ax[1])
+            ax[1].bar_label(ax[1].containers[0])
+            ax[1].set_title('Dados filtrados', fontsize=12, fontweight="bold")
 
-            else:
-                bank_raw_target_perc.set_index('response').plot(kind='pie', y='percentage', autopct='%.2f', ax=ax[0])
-                ax[0].set_ylabel('')
-                ax[0].set_title('Dados brutos', fontsize=12, fontweight="bold")
+        else:
+            bank_raw_target_perc.set_index('response').plot(kind='pie', y='percentage', autopct='%.2f', ax=ax[0])
+            ax[0].set_ylabel('')
+            ax[0].set_title('Dados brutos', fontsize=12, fontweight="bold")
 
-                bank_target_perc.set_index('response').plot(kind='pie', y='percentage', autopct='%.2f', ax=ax[1])
-                ax[1].set_ylabel('')
-                ax[1].set_title('Dados filtrados', fontsize=12, fontweight="bold")
+            bank_target_perc.set_index('response').plot(kind='pie', y='percentage', autopct='%.2f', ax=ax[1])
+            ax[1].set_ylabel('')
+            ax[1].set_title('Dados filtrados', fontsize=12, fontweight="bold")
 
-            plt.tight_layout()
-            st.pyplot(plt)
+        plt.tight_layout()
+        st.pyplot(plt)
 
 
 if __name__ == '__main__':
