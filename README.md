@@ -51,7 +51,7 @@ https://exerc-cio-2-m-dulo-19-sxfasmqqdqndjrvphgwrsm.streamlit.app
 ## Autores
 
 * Nome do autor: [Eric Bonelli leonel]
-* [@SeuLinkedIn](https://www.linkedin.com/in/ericbonelli/)
+* www.linkedin.com/in/ericbonelli
 
 ## Histórico de versões.
 
