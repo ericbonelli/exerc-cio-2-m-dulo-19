@@ -44,4 +44,32 @@ Este projeto tem como objetivo fornecer uma interface interativa para visualizar
 
 ### Executando o projeto
 
-Para rodar a aplicação, use o seguinte comando no terminal:
+Para rodar a aplicação, use o seguinte endereço:
+
+https://exerc-cio-2-m-dulo-19-sxfasmqqdqndjrvphgwrsm.streamlit.app
+
+## Autores
+
+* Nome do autor: [Eric Bonelli leonel]
+* [@SeuLinkedIn](https://www.linkedin.com/in/ericbonelli/)
+
+## Histórico de versões.
+
+* 0.2
+  * Ajustes de diversos bugs e otimização
+* 0.1
+  * Primeira versão
+
+## Licença de uso
+
+Esse projeto possui licença de uso [MIT] - acesse o arquivo LICENSE.md para mais detalhes.
+
+## Fontes de inspiração
+
+Inspiração, trechos de códigos utilizados, etc.
+* [readme-template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+* [awesome-readme](https://github.com/matiassingers/awesome-readme)
+* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
+
+
+
